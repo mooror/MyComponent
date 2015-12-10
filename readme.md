@@ -19,4 +19,13 @@ Editors Note
 =======================================
 
 The original MyComponent modx extra was meant to be used through a special UI on the frontend and while it could technically
-be used from the commandline it was hard to get things working. I forked this repository in hopes of making this amazing extra easier to use from the commandline.
+be used from the commandline it was hard to get things working. I forked this repository in hopes of making this amazing extra easier to use from the commandline. By default some of you might be able to get the commandline utilities working fine, in which case go ahead and use it just the way it is. But for those of you who have had a hard time with it, this is for you.
+
+So Whats different?
+=======================================
+* Small code edit to bootstrap.php snippet to add a console specific path.
+
+Documentation
+=======================================
+
+The idea to fork this repository came from [this very informative thread](https://github.com/BobRay/MyComponent/issues/29) over on the original projects [github page](https://github.com/BobRay/MyComponent). Soon I will add more documentation once I add more features to my fork but the basic usage can be understood from the thread.

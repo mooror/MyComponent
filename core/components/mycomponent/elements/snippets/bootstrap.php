@@ -1,5 +1,4 @@
 <?php
-/* Path : home/politictran/public_html/test/core/components/mycomponent/elements/snippets/ */
 /* set start time */
 $mtime = microtime();
 $mtime = explode(" ", $mtime);
@@ -17,6 +16,8 @@ if (!defined('MODX_CORE_PATH')) {
       $path1 = dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))) . '/_build/build.config.php';
     }
     else {
+      /* You can place the absolute path of the build.config.php file here to gerentee
+      that the commandline utilities will find it*/
       $path1 = '/home/bushost/public_html/test/assets/mycomponents/_build/build.config.php';
     }
     if (file_exists($path1)) {
