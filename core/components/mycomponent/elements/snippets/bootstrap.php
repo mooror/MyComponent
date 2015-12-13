@@ -18,7 +18,7 @@ if (!defined('MODX_CORE_PATH')) {
     else {
       /* You can place the absolute path of the build.config.php file here to gerentee
       that the commandline utilities will find it*/
-      $path1 = '/home/bushost/public_html/test/assets/mycomponents/_build/build.config.php';
+      $path1 = '/home/bushost/public_html/test/assets/mycomponents/example/_build/build.config.php';
     }
     if (file_exists($path1)) {
         include $path1;
