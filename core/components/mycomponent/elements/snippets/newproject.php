@@ -89,6 +89,8 @@ if (PHP_SAPI === 'cli') {
   }
   $consoleProjectsJsonFile = json_decode(file_get_contents("consoleprojects.json"), true);
 
+  debug("\n\n" . var_dump($consoleProjectsJsonFile) . "\n\n",$debugSetting);
+
   ### Creating a new progect.config.php file ###
   if(array_key_exists($newProjectName, $consoleProjectsJsonFile)){
     echo "That Project name has already been taken. Please choose another or delete the old project";
@@ -97,7 +99,7 @@ if (PHP_SAPI === 'cli') {
   /* create new project config file */
   $newTpl = file_get_contents($mcConfigPath . 'example.config.php');
   if (empty($newTpl)) {
-      $message = 'Could not find example.config.php';
+      debug('could not find example.config.php',$debugSetting);
       return false;
   }
   $newTpl = str_replace('Example', $newProjectName, $newTpl);
@@ -122,8 +124,8 @@ if (PHP_SAPI === 'cli') {
   if (file_exists('consoleprojects.json')) {
     // if the json file exists read its contents into a variable and decode them
     debug('Adding ' . $newProjectName . 'to the consoleprojects.json file',$debugSetting);
-    $entry = array($newProjectName => $newProjectName);
-    $consoleProjectsJsonFile[] = $entry;
+    // $entry = array($newProjectName => $newProjectName);
+    $consoleProjectsJsonFile[$newProjectName] = $newProjectName;
     //file_put_contents('consoleprojects.json', json_encode($jsonObject));
     $fp = fopen('consoleprojects.json', 'w');
     fwrite($fp,  json_encode($consoleProjectsJsonFile));
