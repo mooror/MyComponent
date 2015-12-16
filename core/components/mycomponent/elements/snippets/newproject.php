@@ -53,24 +53,48 @@ if (PHP_SAPI === 'cli') {
   }
 
   ### Main Utility Code ###
-  /* update MC current.project.php file */
   $content = file_get_contents($cpFile);
+  ### Updating the current.progect.php file ###
+  /* Delete old current.project.php file */
+  unlink($cpFile);
+  /* update MC current.project.php file */
   $previousProject = preg_replace('/.*\$currentProject = \'(.*)\';/s', '$1', $content);
-  debug("previousProject Variable -> " . $previousProject,$debugSetting);
-  $content = str_replace($previousProject, $newProjectName, $content);
-  debug("Content Variable -> " . $content,$debugSetting);
+  debug("Previous project variables -> " . $previousProject,$debugSetting);
+  $currentProjectContent = "<?php
+  /** MyComponent Current Project
+   *  Change this file whenever you work on another project
+   *
+   *  This should be set to the lowercase name of your package and
+   *  Should match the \$packageNameLower value in the Project Config
+   *  file (which must be named {packageNameLower}.config.php)
+   * */
+   \$currentProject = '" . $newProjectName . "';";
   $fp = fopen($cpFile, 'w');
-  if ($fp) {
-  fwrite($fp, $content);
+  fwrite($fp, $currentProjectContent);
   fclose($fp);
-  }
   $currentProject = $newProjectLower;
+
+  ### Check if the consoleprojects.json file exists ###
+  if (file_exists('consoleprojects.json')) {
+    // if the json file exists read its contents into a variable and decode them
+    echo 'The consoleprojects.json file exists' . PHP_EOL;
+  } else {
+    // If the json file does not exists then create it and fill it with the previos project name
+    echo "The consoleprojects.json file does not exist"  . PHP_EOL;
+    $jsonObject = array($previousProject => $previousProject);
+    //file_put_contents('consoleprojects.json', json_encode($jsonObject));
+    $fp = fopen('consoleprojects.json', 'w');
+    fwrite($fp,  json_encode($jsonObject));
+    fclose($fp);
+  }
+  $consoleProjectsJsonFile = json_decode(file_get_contents("consoleprojects.json"), true);
+
+  ### Creating a new progect.config.php file ###
+  if(array_key_exists($newProjectName, $consoleProjectsJsonFile)){
+    echo "That Project name has already been taken. Please choose another or delete the old project";
+    return false;
+  }
   /* create new project config file */
-  // $props = array();
-  // $props['mycomponentCore'] = $corePath . 'components/mycomponent/';
-  // require_once $props['mycomponentCore'] . 'model/mycomponent/helpers.class.php';
-  // $helpers = new Helpers($modx, $props);
-  // $helpers->init();
   $newTpl = file_get_contents($mcConfigPath . 'example.config.php');
   if (empty($newTpl)) {
       $message = 'Could not find example.config.php';
@@ -95,6 +119,16 @@ if (PHP_SAPI === 'cli') {
   echo "SUCCESS: new config file created. Its recommended that you edit the new config file before running any utilities". PHP_EOL;
   debug("Project Name -> " . $newProjectName,$debugSetting);
   debug("Debug Setting -> " . $debugSetting,$debugSetting);
+  if (file_exists('consoleprojects.json')) {
+    // if the json file exists read its contents into a variable and decode them
+    debug('Adding ' . $newProjectName . 'to the consoleprojects.json file',$debugSetting);
+    $entry = array($newProjectName => $newProjectName);
+    $consoleProjectsJsonFile[] = $entry;
+    //file_put_contents('consoleprojects.json', json_encode($jsonObject));
+    $fp = fopen('consoleprojects.json', 'w');
+    fwrite($fp,  json_encode($consoleProjectsJsonFile));
+    fclose($fp);
+  }
   echo "INFO: Stopping commandline utility -> newproject " . PHP_EOL;
 }
 else {
